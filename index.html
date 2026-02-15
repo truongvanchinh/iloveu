@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Cinematic Sunrise</title>
+
+<style>
+body{
+  margin:0;
+  overflow:hidden;
+  background:#000;
+}
+
+.scene{
+  position:relative;
+  width:100vw;
+  height:100vh;
+}
+
+.sky{
+  position:absolute;
+  width:100%;
+  height:100%;
+  top:0;
+  left:0;
+  background: radial-gradient(circle at 50% 100%, #300 0%, #000 80%);
+
+}
+
+.ground{
+  position:absolute;
+  bottom:0;
+  width:100%;
+  height:40%;
+  background:#000;
+  z-index:10;
+}
+
+.sun{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:-2.0001%;
+  width:60vw;
+  height:60vw;
+  max-width:550px;
+  max-height:550px;
+  border-radius:50%;
+  background:radial-gradient(circle,#ff8c00 40%,#ff4500);
+  filter:blur(1px);
+  z-index:5;
+}
+
+.person{
+  position:absolute;
+  bottom:38%;
+  width:120px;
+  height:260px;
+  fill:black;
+  z-index:15;
+}
+
+.left{ left:-150px; }
+.right{ right:-150px; }
+
+.love-text{
+  position:absolute;
+  top:53%;
+  width:100%;
+  text-align:center;
+  font-size:60px;
+  font-family:cursive;
+  color:#ff2d55;
+  opacity:0;
+  transition:opacity 2s ease;
+  z-index:20;
+  text-shadow:0 0 20px rgba(255,45,85,0.7);
+}
+</style>
+</head>
+
+<body>
+
+<div class="scene">
+  <div class="sky" id="sky"></div>
+  <div class="sun" id="sun"></div>
+  <div class="ground"></div>
+
+  <!-- LEFT PERSON -->
+    <svg class="person left" id="leftPerson" viewBox="0 0 200 400">
+    <g id="leftBody">
+        <path d="M100 40 
+                C80 40 70 70 70 90
+                C70 120 85 140 100 140
+                C115 140 130 120 130 90
+                C130 70 120 40 100 40 Z"/>
+                
+        <path d="M85 140 L115 140 L125 250 L75 250 Z"/>
+        
+        <path id="leftArm1" d="M85 150 L50 210" stroke="black" stroke-width="15"/>
+        <path id="leftArm2" d="M115 150 L150 210" stroke="black" stroke-width="15"/>
+        
+        <path id="leftLeg1" d="M90 250 L80 350" stroke="black" stroke-width="18"/>
+        <path id="leftLeg2" d="M110 250 L120 350" stroke="black" stroke-width="18"/>
+    </g>
+    </svg>
+
+    <!-- RIGHT PERSON -->
+    <!-- RIGHT PERSON (FEMALE) -->
+    <svg class="person right" id="rightPerson" viewBox="0 0 200 400">
+    <g id="rightBody">
+
+        <!-- TÓC DÀI -->
+        <path d="
+        M60 85
+        C60 40 140 40 140 85
+        C145 140 125 190 100 190
+        C75 190 55 140 60 85 Z"
+        fill="black"/>
+
+        <!-- ĐẦU -->
+        <path d="M100 40 
+                C80 40 70 70 70 90
+                C70 120 85 140 100 140
+                C115 140 130 120 130 90
+                C130 70 120 40 100 40 Z"/>
+
+        <!-- THÂN + VÁY -->
+        <path d="M85 140 
+                L115 140 
+                L160 250 
+                L40 250 Z"/>
+
+        <!-- TAY -->
+        <path id="rightArm1" d="M85 150 L50 210" stroke="black" stroke-width="15"/>
+        <path id="rightArm2" d="M115 150 L150 210" stroke="black" stroke-width="15"/>
+
+        <!-- CHÂN -->
+        <path id="rightLeg1" d="M90 250 L80 350" stroke="black" stroke-width="18"/>
+        <path id="rightLeg2" d="M110 250 L120 350" stroke="black" stroke-width="18"/>
+
+    </g>
+    </svg>
+
+
+
+  <div class="love-text" id="loveText">I Love You ❤️</div>
+</div>
+
+<script>
+const sun = document.getElementById("sun");
+const sky = document.getElementById("sky");
+const left = document.getElementById("leftPerson");
+const right = document.getElementById("rightPerson");
+const text = document.getElementById("loveText");
+
+let progress = 0;
+
+function ease(t){
+  return t*t*(3-2*t); // smoothstep
+}
+
+function animate(){
+  progress += 0.008
+
+  if(progress <= 1){
+
+    let t = ease(progress);
+
+    /* SUN HEIGHT */
+    let height = t * 35;
+    sun.style.bottom = height + "%";
+
+    /* SUN COLOR */
+    let sunColor = `radial-gradient(circle,
+      rgba(255,${150+100*t},0,1) 40%,
+      rgba(255,100,0,0.9) 70%)`;
+    sun.style.background = sunColor;
+
+    /* CINEMATIC SKY (multi layer) */
+    let sunTopPercent = 100 - height;
+    sky.style.background = `
+        radial-gradient(
+            circle at 50% ${sunTopPercent}%,
+            rgba(255,60,0,${0.95*t}) 0%,
+            rgba(255,100,0,${0.9*t}) 15%,
+            rgba(255,150,0,${0.8*t}) 30%,
+            rgba(180,40,0,${0.7*t}) 55%,
+            rgba(20,0,0,1) 100%
+        )
+        `;
+
+    requestAnimationFrame(animate);
+
+  } else {
+    walk();
+  }
+}
+
+function walkAnimation(){
+
+  let angle = 0;
+
+  return setInterval(()=>{
+    angle += 0.1;
+
+    let swing = Math.sin(angle) * 20;
+
+    // LEFT PERSON
+    document.getElementById("leftLeg1").setAttribute("transform",
+      `rotate(${swing} 90 250)`);
+
+    document.getElementById("leftLeg2").setAttribute("transform",
+      `rotate(${-swing} 110 250)`);
+
+    document.getElementById("leftArm1").setAttribute("transform",
+      `rotate(${-swing} 85 150)`);
+
+    document.getElementById("leftArm2").setAttribute("transform",
+      `rotate(${swing} 115 150)`);
+
+    // RIGHT PERSON
+    document.getElementById("rightLeg1").setAttribute("transform",
+      `rotate(${swing} 90 250)`);
+
+    document.getElementById("rightLeg2").setAttribute("transform",
+      `rotate(${-swing} 110 250)`);
+
+    document.getElementById("rightArm1").setAttribute("transform",
+      `rotate(${-swing} 85 150)`);
+
+    document.getElementById("rightArm2").setAttribute("transform",
+      `rotate(${swing} 115 150)`);
+
+  }, 40);
+}
+
+
+function walk(){
+  let a = walkAnimation(); // thêm dòng này
+
+  left.style.transition="left 6s linear";
+  right.style.transition="right 6s linear";
+
+  left.style.left="42%";
+  right.style.right="42%";
+
+  setTimeout(()=>{
+    left.style.transform="rotate(+6deg)";
+    right.style.transform="rotate(-6deg)";
+    text.style.opacity=1;
+    clearInterval(a)
+  },6000);
+}
+
+
+animate();
+</script>
+
+</body>
+</html>
