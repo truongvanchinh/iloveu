@@ -5,17 +5,24 @@
 <title>Cinematic Sunrise</title>
 
 <style>
-body{
+    html, body{
   margin:0;
+  padding:0;
   overflow:hidden;
   background:#000;
 }
 
+*{
+  box-sizing:border-box;
+}
+
+
 .scene{
   position:relative;
-  width:100vw;
-  height:100vh;
+  width:100%;
+  height:100dvh;
 }
+
 
 .sky{
   position:absolute;
@@ -144,7 +151,7 @@ body{
 
 
 
-  <div class="love-text" id="loveText">I Love You ❤️</div>
+  <div class="love-text" id="loveText">Tui iu bà ❤️</div>
 </div>
 
 <script>
@@ -153,7 +160,6 @@ const sky = document.getElementById("sky");
 const left = document.getElementById("leftPerson");
 const right = document.getElementById("rightPerson");
 const text = document.getElementById("loveText");
-
 let progress = 0;
 
 function ease(t){
@@ -161,7 +167,7 @@ function ease(t){
 }
 
 function animate(){
-  progress += 0.008
+  progress += 0.002
 
   if(progress <= 1){
 
